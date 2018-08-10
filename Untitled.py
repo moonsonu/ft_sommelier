@@ -12,11 +12,8 @@ def plot_scatter_matrix(wine_data, good_threshold, bad_threshold, save_plot=Fals
                 df.columns[i]
                 axes[i, j].text(0.5, 0.5, df.columns[i], ha='center')
             else:
-                for k in df['quality']:
-                    if k == good_threshold:
-                        color = 'green'
-                    elif k == bad_threshold:
-                        color = 'red'
+                for k in df['quality']
+                    color = ['green' if k == good_threshold 'red' elif k == bad_threshold else 'none']
                 axes[i,j].scatter(df[df.columns[i]], df[df.columns[j]], c = color)
     if save_plot == True:
         plt.savefig("./wine_data.png")

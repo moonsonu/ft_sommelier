@@ -15,7 +15,5 @@ def plot_scatter_matrix(wine_data, good_threshold, bad_threshold, save_plot=Fals
 			else:
 				colors = ['blue' if k >= good_threshold else 'red' for k in red_wine['quality']]
 				axes[i, j].scatter(red_wine[red_wine.columns[i]], red_wine[red_wine.columns[j]], c=colors)
-	if save_plot=True
-	   plt.savefig("./wine_data.png")
 	plt.tight_layout()
 	fig
