@@ -4,14 +4,14 @@
 # # V.1 Exploring the green reds
 # ## a) function that plot scatterplot matrix of red wine data
 
-# In[3]:
+# In[4]:
 
 
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-def plot_scatter_matrix(wine_data, good_threshold, bad_threshold, save_plot=False):
+def plot_scatter_matrix(wine_data, good_threshold, bad_threshold, save_plot):
     df = pd.read_csv(wine_data, sep=';')
     numvars, numdata = df.shape
     fig, axes = plt.subplots(numdata, numdata, figsize=(50,50))
@@ -36,16 +36,14 @@ plot_scatter_matrix('winequality-red.csv', 8, 3, save_plot=False)
 # 
 
 # # V.2 Learning to perceptron
-# ## a) & b) implement a perceptron in 'C'ython
+# ## a) & b) implement a perceptron
 
-# In[19]:
+# In[135]:
 
 
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import array
-import numpy as np
 import random
 
 class perceptron():
@@ -54,8 +52,11 @@ class perceptron():
         self.eta = eta
         self.n_iter = n_iter
     def fit(self, X, y):
-        self.w_ = (1 + X.shape[1])
+        self.w_ = []
+        for i in range(1 + X.shape[1]):
+            self.w_.append(random.random())
         self.errors_ = []
+    
         for _ in range(self.n_iter):
             errors = 0
             for xi, target in zip(X, y):
@@ -67,16 +68,18 @@ class perceptron():
             print(self.w_)
         return self
     def net_input(self, X):
-        return np.dot(X, self.w_[1:]) + self.w_[0]
+        for i in X:
+            for j in self.w_[1:]:
+                result += X[i] * self.w_[1:j]
+        return result + self.w_[0]
     def predict(self, X):
         return np.where(self.net_input(X) > self.thresholds, 1, -1)
 
 df = pd.read_csv('winequality-red.csv', sep=';')
 df_filtered = df[(df.quality >= 8) | (df.quality <= 3)]
 df_data = df_filtered[['alcohol', 'pH', 'quality']]
-df_data =
-X = df_data[['alcohol', 'pH']]
 y = ['1' if k >= 8 else '0' for k in df_data['quality']]
+X = df_data[['alcohol', 'pH']].values
 p = perceptron(eta=0.1)
 p.fit(X, y)
 print(p.errors_)
@@ -85,9 +88,5 @@ print(p.errors_)
 # In[ ]:
 
 
-y = ['1' if k >= 8 else '0' for k in df_data['quality']]
 
-p = perceptron(eta=0.1)
-p.fit(X, y)
-print(p.errors_)
 
