@@ -38,7 +38,7 @@ plot_scatter_matrix('winequality-red.csv', 8, 3, save_plot=False)
 # # V.2 Learning to perceptron
 # ## a) & b) implement a perceptron
 
-# In[40]:
+# In[70]:
 
 
 import pandas as pd
@@ -55,25 +55,24 @@ class perceptron():
         self.w_ = []
         for i in range(1 + X.shape[1]):
             self.w_.append(random.random())
+        print(self.w_)
         self.errors_ = []
-        #X = [y for x in X for y in x]
+
         for _ in range(self.n_iter):
             errors = 0
             for xi, target in zip(X, y):
-                for row in X:
-                    prediction = predict(xi)
-                update = self.eta * (int(target) - prediction)
+                update = self.eta * (int(target) - self.predict(xi))
                 self.w_[1:] += update * xi
                 self.w_[0] += update
                 errors += int(update != 0.0)
             self.errors_.append(errors)
-            print(self.w_)
+            #print(self.w_)
         return self
     def net_input(self, X):
-        result = 0
-        for j in range(1, len(self.w_)):
-            result += X * self.w_[j]
-        return result + self.w_[0]
+        activation = self.w_[0]
+        for i in range(len(X)):
+            activation += self.w_[i + 1] * X[i]
+        return activation
     def predict(self, X):
         if self.net_input(X) > self.thresholds:
             return 1
@@ -82,7 +81,7 @@ class perceptron():
 df = pd.read_csv('winequality-red.csv', sep=';')
 df_filtered = df[(df.quality >= 8) | (df.quality <= 3)]
 df_data = df_filtered[['alcohol', 'pH', 'quality']]
-y = ['1' if k >= 8 else '0' for k in df_data['quality']]
+y = ['1' if k >= 8 else '-1' for k in df_data['quality']]
 X = df_data[['alcohol', 'pH']].values
 p = perceptron(eta=0.1)
 p.fit(X, y)
