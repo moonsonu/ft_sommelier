@@ -38,7 +38,7 @@ plot_scatter_matrix('winequality-red.csv', 8, 3, save_plot=False)
 # # V.2 Learning to perceptron
 # ## a) & b) implement a perceptron
 
-# In[135]:
+# In[40]:
 
 
 import pandas as pd
@@ -56,11 +56,13 @@ class perceptron():
         for i in range(1 + X.shape[1]):
             self.w_.append(random.random())
         self.errors_ = []
-    
+        #X = [y for x in X for y in x]
         for _ in range(self.n_iter):
             errors = 0
             for xi, target in zip(X, y):
-                update = self.eta * (target - self.predict(xi))
+                for row in X:
+                    prediction = predict(xi)
+                update = self.eta * (int(target) - prediction)
                 self.w_[1:] += update * xi
                 self.w_[0] += update
                 errors += int(update != 0.0)
@@ -68,13 +70,15 @@ class perceptron():
             print(self.w_)
         return self
     def net_input(self, X):
-        for i in X:
-            for j in self.w_[1:]:
-                result += X[i] * self.w_[1:j]
+        result = 0
+        for j in range(1, len(self.w_)):
+            result += X * self.w_[j]
         return result + self.w_[0]
     def predict(self, X):
-        return np.where(self.net_input(X) > self.thresholds, 1, -1)
-
+        if self.net_input(X) > self.thresholds:
+            return 1
+        else:
+            return -1
 df = pd.read_csv('winequality-red.csv', sep=';')
 df_filtered = df[(df.quality >= 8) | (df.quality <= 3)]
 df_data = df_filtered[['alcohol', 'pH', 'quality']]
